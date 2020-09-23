@@ -1,8 +1,10 @@
 import os
 
+from pytz import timezone
 from datetime import datetime
 from dotenv import load_dotenv
 from discord.ext import commands, tasks
+import pytz
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
@@ -21,7 +23,7 @@ videos = [
 
 @tasks.loop(hours=1)
 async def called_once_a_day():
-	today = datetime.today()
+	today = pytz.utc.localize(datetime.utcnow()).astimezone(pytz.timezone('US/Pacific'))
 	ymd = (today.year, today.month, today.day)
 	if ymd not in cache:
 		if today.weekday() == 2: # Wednesday 
